@@ -1,0 +1,4 @@
+{
+  "access": ["MGMT_IN"],
+  "border": ["MGMT_IN", "WAN_OUT", "VPN_FILTER"]
+}

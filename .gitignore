@@ -1,0 +1,19 @@
+# Titkok
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Futás közben keletkező mentések
+automation/python/configs/
+
+# Nagy / licencelt fájlok
+*.gns3project
+*.image
+*.bin
+*.qcow2
+*.mp4

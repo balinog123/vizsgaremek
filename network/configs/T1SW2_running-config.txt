@@ -1,0 +1,254 @@
+# Backup: T1SW2  |  2026-04-01 10:32:57.585243
+
+
+============================================================
+# show running-config
+============================================================
+
+Building configuration...
+
+
+Current configuration : 8290 bytes
+!
+! Last configuration change at 16:02:04 UTC Sun Mar 29 2026
+!
+version 15.0
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname T1SW2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 <REDACTED>
+!
+username admin privilege 15 secret 5 <REDACTED>
+no aaa new-model
+!
+!
+!
+!
+!
+vtp domain CISCO-vIOS
+vtp mode transparent
+!
+!
+!
+ip domain-name manila.local
+ip cef
+no ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name Wireless
+!
+vlan 11
+ name Developers
+!
+vlan 12
+ name Modelers
+!
+vlan 13
+ name Graphics
+!
+vlan 14
+ name Sound
+!
+vlan 99
+ name unused
+!
+vlan 100
+ name Management
+!
+vlan 200,300 
+!
+ip ssh time-out 60
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10-15,100
+ switchport mode trunk
+!
+interface GigabitEthernet0/0
+ description TRUNK_TO_ROUTERS
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10-15,100
+ switchport mode trunk
+ switchport port-security mac-address sticky
+ media-type rj45
+ duplex full
+ no negotiation auto
+!
+interface GigabitEthernet0/1
+ description UNUSED_SEGMENT_1
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description UNUSED_SEGMENT_1
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ switchport access vlan 13
+ switchport port-security mac-address sticky
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ description UNUSED_SEGMENT_2
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/1
+ description UNUSED_SEGMENT_2
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/2
+ description UNUSED_SEGMENT_2
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/3
+ description UNUSED_SEGMENT_2
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ description UNUSED_SEGMENT_3
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/1
+ description UNUSED_SEGMENT_3
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/2
+ description UNUSED_SEGMENT_3
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/3
+ description UNUSED_SEGMENT_3
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ description UNUSED_SEGMENT_4
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/1
+ description UNUSED_SEGMENT_4
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/2
+ description LACP_MEMBER_TO_SW1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10-15,100
+ switchport mode trunk
+ media-type rj45
+ negotiation auto
+ channel-group 1 mode active
+!
+interface GigabitEthernet3/3
+ description LACP_MEMBER_TO_SW1
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10-15,100
+ switchport mode trunk
+ media-type rj45
+ negotiation auto
+ channel-group 1 mode active
+!
+interface Vlan100
+ ip address 192.168.110.12 255.255.255.0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+ip access-list extended MGMT_IN
+ remark Allow SSH only from T1, T2, T3 Management VLANs
+ permit tcp 192.168.110.0 0.0.0.255 any eq 22
+ permit tcp 192.168.120.0 0.0.0.255 any eq 22
+ permit tcp 192.168.130.0 0.0.0.255 any eq 22
+ deny   ip any any log
+!
+!
+!
+snmp-server community <REDACTED> RO
+snmp-server chassis-id 
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ access-class MGMT_IN in
+ privilege level 15
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ access-class MGMT_IN in
+ logging synchronous
+ login
+!
+!
+end
+
+T1SW2#

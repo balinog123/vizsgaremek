@@ -1,0 +1,208 @@
+# Backup: T3R2  |  2026-04-01 10:33:26.755378
+
+
+============================================================
+# show running-config
+============================================================
+
+Building configuration...
+
+Current configuration : 3147 bytes
+!
+upgrade fpd auto
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname T3R2
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 <REDACTED>
+!
+no aaa new-model
+ip source-route
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ip domain name manila.local
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 <REDACTED>
+archive
+ log config
+  hidekeys
+! 
+!
+!
+!
+!
+ip ssh time-out 60
+ip ssh version 2
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 192.168.130.130 255.255.255.252
+ duplex full
+ speed 1000
+ media-type gbic
+ negotiation auto
+ ipv6 address 2001:DB8:0:1::/64 eui-64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0
+ no ip address
+ negotiation auto
+ ipv6 enable
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.30.1 255.255.255.192
+ ip helper-address 192.168.130.100
+ ipv6 address 2001:DB8:3:10::2/64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0.11
+ encapsulation dot1Q 11
+ ip address 192.168.31.1 255.255.255.192
+ ip helper-address 192.168.130.100
+ ipv6 address 2001:DB8:3:11::2/64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0.12
+ encapsulation dot1Q 12
+ ip address 192.168.32.1 255.255.255.192
+ ip helper-address 192.168.130.100
+ ipv6 address 2001:DB8:3:12::2/64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0.13
+ encapsulation dot1Q 13
+ ip address 192.168.33.1 255.255.255.192
+ ip helper-address 192.168.130.100
+ ipv6 address 2001:DB8:3:13::2/64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0.14
+ encapsulation dot1Q 14
+ ip address 192.168.34.1 255.255.255.192
+ ip helper-address 192.168.130.100
+ ipv6 address 2001:DB8:3:14::2/64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0.100
+ encapsulation dot1Q 100
+ ip address 192.168.130.1 255.255.255.128
+!
+interface GigabitEthernet2/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet4/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet5/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet6/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+router ospf 1
+ router-id 3.2.2.2
+ log-adjacency-changes
+ passive-interface default
+ no passive-interface GigabitEthernet0/0
+ network 192.168.30.0 0.0.0.63 area 0
+ network 192.168.31.0 0.0.0.63 area 0
+ network 192.168.32.0 0.0.0.63 area 0
+ network 192.168.33.0 0.0.0.63 area 0
+ network 192.168.34.0 0.0.0.63 area 0
+ network 192.168.130.0 0.0.0.127 area 0
+ network 192.168.130.128 0.0.0.3 area 0
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+ipv6 router ospf 1
+ router-id 3.2.2.2
+ passive-interface default
+ no passive-interface GigabitEthernet0/0
+ log-adjacency-changes
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ logging synchronous
+ stopbits 1
+line aux 0
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ logging synchronous
+ login local
+ transport input ssh
+!
+end

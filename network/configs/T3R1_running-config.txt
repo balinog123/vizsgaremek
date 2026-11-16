@@ -1,0 +1,246 @@
+# Backup: T3R1  |  2026-04-01 10:33:17.699574
+
+
+============================================================
+# show running-config
+============================================================
+
+Building configuration...
+
+Current configuration : 4653 bytes
+!
+upgrade fpd auto
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname T3R1
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 <REDACTED>
+!
+no aaa new-model
+ip source-route
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ip domain name manila.local
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 <REDACTED>
+archive
+ log config
+  hidekeys
+! 
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 14
+crypto isakmp key <REDACTED> address 192.168.155.11
+crypto isakmp key <REDACTED> address 192.168.155.12
+crypto isakmp key <REDACTED> address 192.168.155.21
+!
+!
+crypto ipsec transform-set TS esp-aes 256 esp-sha-hmac 
+!
+crypto ipsec profile T3
+ set transform-set TS 
+!
+!
+!
+!
+ip ssh time-out 60
+ip ssh version 2
+!
+!
+!
+!
+interface Tunnel31
+ ip address 172.16.13.2 255.255.255.252
+ ip access-group VPN_FILTER in
+ tunnel source GigabitEthernet6/0
+ tunnel destination 192.168.155.11
+ tunnel protection ipsec profile T3
+!
+interface Tunnel32
+ ip address 172.16.13.6 255.255.255.252
+ ip access-group VPN_FILTER in
+ tunnel source GigabitEthernet6/0
+ tunnel destination 192.168.155.12
+ tunnel protection ipsec profile T3
+!
+interface Tunnel33
+ ip address 172.16.31.5 255.255.255.252
+ ip access-group VPN_FILTER in
+ tunnel source GigabitEthernet6/0
+ tunnel destination 192.168.155.21
+ tunnel protection ipsec profile T3
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 192.168.130.129 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly
+ ip ospf 1 area 0
+ duplex full
+ speed 1000
+ media-type gbic
+ negotiation auto
+ ipv6 address 2001:DB8:1::/64 eui-64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet1/0
+ ip address 192.168.130.145 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly
+ negotiation auto
+ ipv6 address 2001:DB8:0:2::/64 eui-64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet2/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet4/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet5/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet6/0
+ ip address 192.168.155.31 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly
+ negotiation auto
+!
+router ospf 1
+ log-adjacency-changes
+ passive-interface default
+ no passive-interface GigabitEthernet0/0
+ no passive-interface GigabitEthernet1/0
+ no passive-interface Tunnel31
+ no passive-interface Tunnel32
+ no passive-interface Tunnel33
+ network 192.168.130.128 0.0.0.3 area 0
+ network 192.168.130.144 0.0.0.3 area 0
+ default-information originate
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 192.168.155.1
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list PAT interface GigabitEthernet6/0 overload
+!
+ip access-list extended ACL_INBOUND
+ permit tcp any any established
+ip access-list extended MGMT_IN
+ remark Allow SSH only from T1, T2, T3 Management VLANs
+ permit tcp 192.168.110.0 0.0.0.255 any eq 22
+ permit tcp 192.168.120.0 0.0.0.255 any eq 22
+ permit tcp 192.168.130.0 0.0.0.255 any eq 22
+ deny   ip any any log
+ip access-list extended PAT
+ permit ip 192.168.30.0 0.0.0.255 any
+ permit ip 192.168.31.0 0.0.0.255 any
+ permit ip 192.168.33.0 0.0.0.255 any
+ permit ip 192.168.34.0 0.0.0.255 any
+ permit ip 10.0.0.0 0.0.0.3 any
+ permit ip 11.0.0.0 0.0.0.3 any
+ permit ip 192.168.130.0 0.0.0.255 any
+ip access-list extended WAN_OUT
+ remark Allow Web and DNS
+ permit tcp any any eq www
+ permit tcp any any eq 443
+ permit udp host 192.168.130.100 any eq domain
+ remark Allow IPSec and GRE VPN traffic
+ permit udp any any eq isakmp
+ permit udp any any eq non500-isakmp
+ permit esp any any
+ permit gre any any
+ permit icmp any any echo
+ deny   udp host 192.168.155.31 any eq domain
+ deny   ip any any log
+!
+ipv6 router ospf 1
+ router-id 4.4.4.4
+ log-adjacency-changes
+ default-information originate
+ passive-interface default
+ no passive-interface GigabitEthernet0/0
+ no passive-interface GigabitEthernet1/0
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ logging synchronous
+ stopbits 1
+line aux 0
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ access-class MGMT_IN in
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ access-class MGMT_IN in
+ login
+!
+end

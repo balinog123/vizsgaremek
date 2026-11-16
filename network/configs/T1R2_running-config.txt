@@ -1,0 +1,285 @@
+# Backup: T1R2  |  2026-04-01 10:32:38.534747
+
+
+============================================================
+# show running-config
+============================================================
+
+Building configuration...
+
+Current configuration : 5359 bytes
+!
+upgrade fpd auto
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname T1R2
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 <REDACTED>
+!
+no aaa new-model
+ip source-route
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ip domain name manila.local
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 <REDACTED>
+archive
+ log config
+  hidekeys
+! 
+!
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 14
+crypto isakmp key <REDACTED> address 192.168.155.21
+crypto isakmp key <REDACTED> address 192.168.155.31
+!
+!
+crypto ipsec transform-set TS esp-aes 256 esp-sha-hmac 
+!
+crypto ipsec profile T1
+ set transform-set TS 
+!
+!
+!
+!
+ip ssh time-out 60
+ip ssh version 2
+!
+!
+!
+!
+interface Tunnel12
+ ip address 172.16.12.5 255.255.255.252
+ ip access-group VPN_FILTER in
+ tunnel source GigabitEthernet6/0
+ tunnel destination 192.168.155.21
+ tunnel protection ipsec profile T1
+!
+interface Tunnel13
+ ip address 172.16.13.5 255.255.255.252
+ ip access-group VPN_FILTER in
+ tunnel source GigabitEthernet6/0
+ tunnel destination 192.168.155.31
+ tunnel protection ipsec profile T1
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex full
+ speed 1000
+ media-type gbic
+ negotiation auto
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.3 255.255.255.0
+ ip helper-address 192.167.110.100
+ ip nat inside
+ ip virtual-reassembly
+ standby 10 ip 192.168.10.1
+ standby 10 priority 90
+ standby 10 preempt
+!
+interface GigabitEthernet0/0.11
+ encapsulation dot1Q 11
+ ip address 192.168.11.3 255.255.255.0
+ ip helper-address 192.168.110.100
+ ip nat inside
+ ip virtual-reassembly
+ standby 11 ip 192.168.11.1
+ standby 11 priority 90
+ standby 11 preempt
+!
+interface GigabitEthernet0/0.12
+ encapsulation dot1Q 12
+ ip address 192.168.12.3 255.255.255.0
+ ip helper-address 192.168.110.100
+ ip nat inside
+ ip virtual-reassembly
+ standby 12 ip 192.168.12.1
+ standby 12 priority 90
+ standby 12 preempt
+!
+interface GigabitEthernet0/0.13
+ encapsulation dot1Q 13
+ ip address 192.168.13.3 255.255.255.0
+ ip helper-address 192.168.110.100
+ ip nat inside
+ ip virtual-reassembly
+ standby 13 ip 192.168.13.1
+ standby 13 priority 90
+ standby 13 preempt
+!
+interface GigabitEthernet0/0.14
+ encapsulation dot1Q 14
+ ip address 192.168.14.3 255.255.255.0
+ ip helper-address 192.168.110.100
+ ip nat inside
+ ip virtual-reassembly
+ standby 14 ip 192.168.14.1
+ standby 14 priority 90
+ standby 14 preempt
+!
+interface GigabitEthernet0/0.100
+ encapsulation dot1Q 100
+ ip address 192.168.110.3 255.255.255.0
+ ip helper-address 192.168.1.100
+ ip helper-address 192.167.110.100
+ ip nat inside
+ ip virtual-reassembly
+ standby 100 ip 192.168.110.1
+ standby 100 priority 90
+ standby 100 preempt
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet4/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet5/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet6/0
+ ip address 192.168.155.12 255.255.255.0
+ ip access-group WAN_OUT out
+ ip nat outside
+ ip virtual-reassembly
+ negotiation auto
+!
+router ospf 1
+ router-id 2.2.2.2
+ log-adjacency-changes
+ passive-interface default
+ no passive-interface Tunnel12
+ no passive-interface Tunnel13
+ network 172.16.12.4 0.0.0.3 area 0
+ network 172.16.13.4 0.0.0.3 area 0
+ network 192.168.10.0 0.0.0.255 area 0
+ network 192.168.11.0 0.0.0.255 area 0
+ network 192.168.12.0 0.0.0.255 area 0
+ network 192.168.13.0 0.0.0.255 area 0
+ network 192.168.14.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 192.168.155.1
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list PAT interface GigabitEthernet6/0 overload
+!
+ip access-list extended MGMT_IN
+ remark Allow SSH only from T1, T2, T3 Management VLANs
+ permit tcp 192.168.110.0 0.0.0.255 any eq 22
+ permit tcp 192.168.120.0 0.0.0.255 any eq 22
+ permit tcp 192.168.130.0 0.0.0.255 any eq 22
+ deny   ip any any log
+ip access-list extended PAT
+ permit ip 192.168.10.0 0.0.0.255 any
+ permit ip 192.168.11.0 0.0.0.255 any
+ permit ip 192.168.12.0 0.0.0.255 any
+ permit ip 192.168.13.0 0.0.0.255 any
+ permit ip 192.168.14.0 0.0.0.255 any
+ permit ip 192.168.110.0 0.0.0.255 any
+ip access-list extended WAN_OUT
+ remark Allow Web and DNS
+ permit tcp any any eq www
+ permit tcp any any eq 443
+ permit udp host 192.168.110.100 any eq domain
+ permit udp any eq domain host 192.168.110.100
+ remark Allow IPSec and GRE VPN traffic
+ permit udp any any eq isakmp
+ permit udp any any eq non500-isakmp
+ permit esp any any
+ permit gre any any
+ remark Allow Ping for testing
+ permit icmp any any echo
+ deny   ip any any log
+!
+!
+!
+!
+!
+!
+snmp-server community <REDACTED> RO
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ logging synchronous
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ access-class MGMT_IN in
+ privilege level 15
+ password <REDACTED>
+ login local
+ transport input ssh
+line vty 5 15
+ access-class MGMT_IN in
+ login
+!
+end

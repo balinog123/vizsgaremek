@@ -1,0 +1,249 @@
+# Backup: T3SW1  |  2026-04-01 10:33:44.128204
+
+
+============================================================
+# show running-config
+============================================================
+
+Building configuration...
+
+
+Current configuration : 8020 bytes
+!
+! Last configuration change at 18:36:35 UTC Tue Mar 31 2026
+!
+version 15.0
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname T3SW1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 <REDACTED>
+!
+username admin privilege 15 secret 5 <REDACTED>
+no aaa new-model
+!
+!
+!
+!
+!
+vtp domain CISCO-vIOS
+vtp mode transparent
+!
+!
+!
+no ip domain-lookup
+ip domain-name manila.local
+ip cef
+no ipv6 cef
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name Wireless
+!
+vlan 11
+ name Developers
+!
+vlan 12
+ name Modelers
+!
+vlan 13
+ name Graphics
+!
+vlan 14
+ name Sound
+!
+vlan 15
+ name Servers
+!
+vlan 99
+ name unused
+!
+vlan 100
+ name Management
+!
+vlan 200,300 
+!
+ip ssh time-out 60
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description DEBIANSERVER
+ switchport access vlan 100
+ switchport port-security mac-address sticky
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description TRUNK_TO_ROUTER
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10-14,100
+ switchport mode trunk
+ switchport port-security mac-address sticky
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/1
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/2
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet1/3
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ description LACP_MEMBER_TO_SW3
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10-15,100
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/1
+ description LACP_MEMBER_TO_SW3
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10-15,100
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/2
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet2/3
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/1
+ description UNUSED
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/2
+ description LACP_MEMBER_TO_SW2
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet3/3
+ description LACP_MEMBER_TO_SW2
+ switchport port-security mac-address sticky
+ shutdown
+ media-type rj45
+ negotiation auto
+!
+interface Vlan100
+ ip address 192.168.130.2 255.255.255.0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+ip access-list extended MGMT_IN
+ remark Allow SSH only from T1, T2, T3 Management VLANs
+ permit tcp 192.168.110.0 0.0.0.255 any eq 22
+ permit tcp 192.168.120.0 0.0.0.255 any eq 22
+ permit tcp 192.168.130.0 0.0.0.255 any eq 22
+ deny   ip any any log
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ access-class MGMT_IN in
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ access-class MGMT_IN in
+ logging synchronous
+ login local
+!
+!
+end
+
+T3SW1#

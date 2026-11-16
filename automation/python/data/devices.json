@@ -1,0 +1,80 @@
+[
+    {
+        "host": "192.168.110.2",
+        "port": 5004,
+        "name": "T1R1",
+        "role": "border"
+    },
+    {
+        "host": "192.168.110.3",
+        "port": 5007,
+        "name": "T1R2",
+        "role": "border"
+    },
+    {
+        "host": "192.168.120.1",
+        "port": 5014,
+        "name": "T2R1",
+        "role": "border"
+    },
+    {
+        "host": "192.168.130.145",
+        "port": 5027,
+        "name": "T3R1",
+        "role": "border"
+    },
+    {
+        "host": "192.168.110.4",
+        "port": 5000,
+        "name": "T1SW1",
+        "role": "access"
+    },
+    {
+        "host": "192.168.110.5",
+        "port": 5003,
+        "name": "T1SW2",
+        "role": "access"
+    },
+    {
+        "host": "127.0.0.1",
+        "port": 5018,
+        "name": "T2SW1",
+        "role": "access"
+    },
+    {
+        "host": "192.168.120.2",
+        "port": 5024,
+        "name": "T2SW2",
+        "role": "access"
+    },
+    {
+        "host": "192.168.130.2",
+        "port": 5033,
+        "name": "T3SW1",
+        "role": "access"
+    },
+    {
+        "host": "192.168.130.162",
+        "port": 5037,
+        "name": "T3SW2",
+        "role": "access"
+    },
+    {
+        "host": "127.0.0.1",
+        "port": 5042,
+        "name": "DMZSW1",
+        "role": "access"
+    },
+    {
+        "host": "192.168.130.130",
+        "port": null,
+        "name": "T3R2",
+        "role": "border"
+    },
+    {
+        "host": "192.168.130.146",
+        "port": null,
+        "name": "T3R3",
+        "role": "border"
+    }
+]

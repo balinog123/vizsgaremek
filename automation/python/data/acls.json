@@ -1,0 +1,51 @@
+{
+  "MGMT_IN": [
+    "ip access-list extended MGMT_IN",
+    " remark Allow SSH only from T1, T2, T3 Management VLANs",
+    " permit tcp 192.168.110.0 0.0.0.255 any eq 22",
+    " permit tcp 192.168.120.0 0.0.0.255 any eq 22",
+    " permit tcp 192.168.130.0 0.0.0.255 any eq 22",
+    " deny ip any any log",
+    " exit",
+    "line vty 0 4",
+    " access-class MGMT_IN in",
+    " exit",
+    "line vty 5 15",
+    " access-class MGMT_IN in",
+    " exit"
+  ],
+  "WAN_OUT": [
+    "ip access-list extended WAN_OUT",
+    " remark Allow Web and DNS",
+    " permit tcp any any eq 80",
+    " permit tcp any any eq 443",
+    " permit udp any any eq 53",
+    " remark Allow IPSec and GRE VPN traffic",
+    " permit udp any any eq 500",
+    " permit udp any any eq 4500",
+    " permit esp any any",
+    " permit gre any any",
+    " remark Allow Ping for testing",
+    " permit icmp any any echo",
+    " deny ip any any log",
+    " exit",
+    "interface GigabitEthernet6/0",
+    " ip access-group WAN_OUT out",
+    " exit"
+  ],
+  "VPN_FILTER": [
+    "ip access-list extended VPN_FILTER",
+    " remark Allow internal 192.168.x.x routing across MESH",
+    " permit ip 192.168.0.0 0.0.255.255 192.168.0.0 0.0.255.255",
+    " remark Allow OSPF routing protocol",
+    " permit ospf any any",
+    " deny ip any any log",
+    " exit",
+    "interface Tunnel12",
+    " ip access-group VPN_FILTER in",
+    " exit",
+    "interface Tunnel13",
+    " ip access-group VPN_FILTER in",
+    " exit"
+  ]
+}
