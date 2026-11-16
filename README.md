@@ -1,8 +1,8 @@
 # GamesKut – 3 telephelyes vállalati hálózat (vizsgaremek)
 
-Rendszer- és alkalmazásüzemeltető technikus vizsgaremek, Pataky István Technikum, 2026.
+Rendszer- és alkalmazásüzemeltető technikus vizsgaremek, Pataky István Technikum, 2026. Csapatmunka (2 fő).
 
-A GamesKut egy kitalált hazai játékfejlesztő cég, amely három telephelyen dolgozik: Budapesten (fejlesztés, szerverek, központ), Komáromban (hang design, menedzsment) és Debrecenben (grafika, 3D modellezés). A projektben a cég teljes, valósághoz közeli IT-infrastruktúráját terveztem meg és építettem fel GNS3-ban: hálózati eszközök, szerverszolgáltatások és biztonság.
+A GamesKut egy kitalált hazai játékfejlesztő cég, amely három telephelyen dolgozik: Budapesten (fejlesztés, szerverek, központ), Komáromban (hang design, menedzsment) és Debrecenben (grafika, 3D modellezés). A projektben a cég teljes, valósághoz közeli IT-infrastruktúráját terveztük meg és építettük fel GNS3-ban: hálózati eszközök, szerverszolgáltatások és biztonság.
 
 ![Teljes topológia](docs/images/topologia.png)
 
@@ -151,7 +151,9 @@ python backup_configs.py
 
 ## Amit tanultam
 
-> TODO: 3-4 pont saját szavakkal, például mi volt a legnehezebb, mit csinálnál másképp.
+- A VPN beállítása nem volt zökkenőmentes: ketten kétféleképpen konfiguráltuk a két végpontot, ezért az IPsec elsőre nem állt fel. Azóta egyeztetett, közös paraméterlistából dolgozom.
+- A feladatok követése: csapatban fontos, hogy nyilván legyen tartva, mi a prioritás és ki min dolgozik, különben átfedések és kimaradások lesznek.
+- A tervezésnél több időt kell szánni az L2 és L3 szint szétválasztására: előre el kell dönteni, hol ér véget az access réteg, és hol kezdődik a routing (melyik eszköz a gateway, hol vannak a VLAN-interfészek). Ennek hiánya a projekt során nehézséget okozott.
 
 ## Megjegyzés
 
