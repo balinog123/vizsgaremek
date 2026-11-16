@@ -9,7 +9,9 @@ import os
 from dotenv import load_dotenv
 
 
-log_file = f"logs/acl_deploy_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+log_file = os.path.join(LOG_DIR, f"acl_deploy_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -20,19 +22,21 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 USERNAME = os.getenv("DEVICE_USERNAME")
 PASSWORD = os.getenv("DEVICE_PASSWORD")
 SECRET   = os.getenv("DEVICE_SECRET")
 
-with open("../data/devices-prod.json") as f:
+with open(os.path.join(DATA_DIR, "devices.json")) as f:
     DEVICES = json.load(f)
 
-with open("../data/roles.json") as f:
+with open(os.path.join(DATA_DIR, "roles.json")) as f:
     ROLES = json.load(f)
 
-with open("../data/acls.json") as f:
+with open(os.path.join(DATA_DIR, "acls.json")) as f:
     ACLS = json.load(f)
 
 def deploy(device: dict) -> bool:

@@ -8,8 +8,9 @@ __pycache__/
 *.pyc
 .venv/
 
-# Futás közben keletkező mentések
+# Futás közben keletkező mentések és naplók
 automation/python/configs/
+automation/python/logs/
 
 # Nagy / licencelt fájlok
 *.gns3project

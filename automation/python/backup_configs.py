@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 from netmiko import ConnectHandler
 from netmiko.exceptions import NetmikoTimeoutException, NetmikoAuthenticationException
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 USERNAME    = os.getenv("DEVICE_USERNAME")
 PASSWORD    = os.getenv("DEVICE_PASSWORD")
@@ -16,13 +18,13 @@ DEVICE_TYPE = "cisco_ios"
 TIMEOUT     = 15
 
 DATE_STR    = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-OUTPUT_DIR  = os.path.join("configs", DATE_STR)
+OUTPUT_DIR  = os.path.join(os.path.dirname(os.path.abspath(__file__)), "configs", DATE_STR)
 
 COMMANDS = [
     "show running-config",
 ]
 
-def load_devices(filepath="../data/devices-prod.json"):
+def load_devices(filepath=os.path.join(DATA_DIR, "devices.json")):
     with open(filepath, "r") as f:
         return json.load(f)
 
